@@ -53,6 +53,38 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        //action button
+        val actionIntent = Intent(applicationContext, Receiver::class.java)
+        actionIntent.putExtra("toast", "This is notification msg")
+
+        val actionPendingIntent = if (Build.VERSION.SDK_INT >= 23) {
+            PendingIntent.getBroadcast(
+                applicationContext, 1,
+                actionIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }else {
+            PendingIntent.getBroadcast(
+                applicationContext, 1,
+                actionIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+
+        //dismiss button
+        val dismissIntent = Intent(applicationContext, ReceiverDismiss::class.java)
+        actionIntent.putExtra("toast", "This is notification msg")
+
+        val dismissPendingIntent = if (Build.VERSION.SDK_INT >= 23) {
+            PendingIntent.getBroadcast(
+                applicationContext, 2,
+                dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }else {
+            PendingIntent.getBroadcast(
+                applicationContext, 2,
+                dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+
         val builder = NotificationCompat.Builder(this@MainActivity, CHANNEL_ID)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val channel = NotificationChannel(CHANNEL_ID, "1", NotificationManager.IMPORTANCE_DEFAULT)
@@ -64,12 +96,16 @@ class MainActivity : AppCompatActivity() {
                 .setContentText("Notification Text")
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
+                .addAction(R.drawable.baseline_message_24, "Toast Message", actionPendingIntent)
+                .addAction(R.drawable.baseline_cancel_24, "Dismiss Message", dismissPendingIntent)
         }else {
             builder.setSmallIcon(R.drawable.baseline_notifications_24)
                 .setContentTitle("Notification Title")
                 .setContentText("This is notification text")
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
+                .addAction(R.drawable.baseline_message_24, "Toast Message", actionPendingIntent)
+                .addAction(R.drawable.baseline_cancel_24, "Dismiss Message", dismissPendingIntent)
                 .priority =
                 NotificationCompat.PRIORITY_DEFAULT
         }
