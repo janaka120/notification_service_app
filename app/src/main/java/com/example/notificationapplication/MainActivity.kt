@@ -6,6 +6,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -85,6 +87,10 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.landscape_with_hearts)
+        val text: String = resources.getString(R.string.big_text)
+
+
         val builder = NotificationCompat.Builder(this@MainActivity, CHANNEL_ID)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val channel = NotificationChannel(CHANNEL_ID, "1", NotificationManager.IMPORTANCE_DEFAULT)
@@ -98,6 +104,11 @@ class MainActivity : AppCompatActivity() {
                 .setAutoCancel(true)
                 .addAction(R.drawable.baseline_message_24, "Toast Message", actionPendingIntent)
                 .addAction(R.drawable.baseline_cancel_24, "Dismiss Message", dismissPendingIntent)
+                .setLargeIcon(icon)
+                .setStyle(NotificationCompat
+                    .BigPictureStyle().bigPicture(icon))
+                .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+
         }else {
             builder.setSmallIcon(R.drawable.baseline_notifications_24)
                 .setContentTitle("Notification Title")
@@ -106,6 +117,9 @@ class MainActivity : AppCompatActivity() {
                 .setAutoCancel(true)
                 .addAction(R.drawable.baseline_message_24, "Toast Message", actionPendingIntent)
                 .addAction(R.drawable.baseline_cancel_24, "Dismiss Message", dismissPendingIntent)
+                .setLargeIcon(icon)
+                .setStyle(NotificationCompat.BigPictureStyle().bigPicture(icon))
+                .setStyle(NotificationCompat.BigTextStyle().bigText(text))
                 .priority =
                 NotificationCompat.PRIORITY_DEFAULT
         }

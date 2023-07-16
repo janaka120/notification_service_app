@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Notification Application</string>
     <string name="Zero">0</string>
+    <string name="big_text">Android notifications are a vital component of the user experience,
+        serving as a means to deliver important information, updates, and alerts to users in a
+        timely and efficient manner. They are a key element of the Android operating system, designed to
+        keep users informed and engaged with their devices.</string>
 </resources>
