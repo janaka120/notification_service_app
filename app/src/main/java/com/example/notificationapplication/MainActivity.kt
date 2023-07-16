@@ -3,6 +3,8 @@ package com.example.notificationapplication
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -38,15 +40,37 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun startNotification() {
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        val pendingIntent = if (Build.VERSION.SDK_INT >= 23) {
+            PendingIntent.getActivities(
+                applicationContext, 0,
+                arrayOf(intent), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }else {
+            PendingIntent.getActivities(
+                applicationContext, 0,
+                arrayOf(intent), PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+
         val builder = NotificationCompat.Builder(this@MainActivity, CHANNEL_ID)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val channel = NotificationChannel(CHANNEL_ID, "1", NotificationManager.IMPORTANCE_DEFAULT)
             val notificationManager : NotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
 
-            builder.setSmallIcon(R.drawable.baseline_notifications_24).setContentTitle("Title").setContentText("Notification Text")
+            builder.setSmallIcon(R.drawable.baseline_notifications_24)
+                .setContentTitle("Title")
+                .setContentText("Notification Text")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
         }else {
-            builder.setSmallIcon(R.drawable.baseline_notifications_24).setContentTitle("Notification Title").setContentText("This is notification text").priority =
+            builder.setSmallIcon(R.drawable.baseline_notifications_24)
+                .setContentTitle("Notification Title")
+                .setContentText("This is notification text")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .priority =
                 NotificationCompat.PRIORITY_DEFAULT
         }
 
